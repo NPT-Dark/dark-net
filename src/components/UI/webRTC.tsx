@@ -3,8 +3,10 @@ import React, { useRef, useState } from "react";
 
 export default function WebRTCCall() {
   const remoteVideo = useRef<HTMLVideoElement>(null);
-  const remoteAudio = useRef<HTMLAudioElement>(null);
+  const localVideo = useRef<HTMLVideoElement>(null);
   const pcRef = useRef<RTCPeerConnection | null>(null);
+  const localStreamRef = useRef<MediaStream | null>(null);
+  const videoTrackRef = useRef<MediaStreamTrack | null>(null);
 
   const [offer, setOffer] = useState("");
   const [answer, setAnswer] = useState("");
@@ -12,53 +14,96 @@ export default function WebRTCCall() {
   const [remoteICE, setRemoteICE] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [localICE, setLocalICE] = useState<any[]>([]);
-  const [hasRemoteVideo, setHasRemoteVideo] = useState(false);
   const [audioReady, setAudioReady] = useState(false);
+  const [videoEnabled, setVideoEnabled] = useState(false);
 
   const start = async () => {
-    let stream: MediaStream | null = null;
     try {
-      stream = await navigator.mediaDevices.getUserMedia({
+      const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           autoGainControl: true,
           noiseSuppression: false,
           echoCancellation: false,
         },
       });
+      localStreamRef.current = stream;
+
+      const pc = new RTCPeerConnection();
+      pcRef.current = pc;
+
+      stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+
+      pc.ontrack = (event) => {
+        const remoteStream = event.streams[0];
+        if (remoteStream.getVideoTracks().length > 0 && remoteVideo.current) {
+          remoteVideo.current.srcObject = remoteStream;
+          remoteVideo.current.muted = false;
+        }
+        if (remoteStream.getAudioTracks().length > 0 && remoteVideo.current) {
+          remoteVideo.current.srcObject = remoteStream;
+          remoteVideo.current.muted = false;
+          setAudioReady(true);
+          remoteVideo.current.play().catch((e) => {
+            console.warn("Audio play error:", e);
+          });
+        }
+      };
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      pc.onicecandidate = (event: any) => {
+        if (event?.candidate !== null) {
+          setLocalICE((prev) => [...prev, event?.candidate.toJSON()]);
+        }
+      };
     } catch (error) {
       console.error("Error accessing microphone:", error);
       alert("Không tìm thấy thiết bị microphone!");
-      return;
     }
+  };
 
-    const pc = new RTCPeerConnection();
-    pcRef.current = pc;
+  const toggleVideo = async () => {
+    if (!pcRef.current || !localStreamRef.current) return;
 
-    stream.getTracks().forEach((track) => pc.addTrack(track, stream));
-
-    pc.ontrack = (event) => {
-      const remoteStream = event.streams[0];
-      if (remoteStream.getVideoTracks().length > 0 && remoteVideo.current) {
-        remoteVideo.current.srcObject = remoteStream;
-        remoteVideo.current.muted = false;
-        setHasRemoteVideo(true);
-      }
-      if (remoteStream.getAudioTracks().length > 0 && remoteAudio.current) {
-        remoteAudio.current.srcObject = remoteStream;
-        remoteAudio.current.muted = false;
-        setAudioReady(true);
-        remoteAudio.current.play().catch((e) => {
-          console.warn("Audio play error:", e);
+    if (!videoEnabled) {
+      try {
+        const videoStream = await navigator.mediaDevices.getUserMedia({
+          video: true,
         });
-      }
-    };
+        const videoTrack = videoStream.getVideoTracks()[0];
+        videoTrackRef.current = videoTrack;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    pc.onicecandidate = (event: any) => {
-      if (event?.candidate !== null) {
-        setLocalICE((prev) => [...prev, event?.candidate.toJSON()]);
+        localStreamRef.current.addTrack(videoTrack);
+        pcRef.current.addTrack(videoTrack, localStreamRef.current);
+
+        if (localVideo.current) {
+          localVideo.current.srcObject = localStreamRef.current;
+          localVideo.current.muted = true;
+          localVideo.current.play().catch(console.warn);
+        }
+
+        setVideoEnabled(true);
+      } catch (err) {
+        console.error("Không thể bật camera:", err);
+        alert("Không tìm thấy hoặc không được phép truy cập camera!");
       }
-    };
+    } else {
+      const videoTrack = videoTrackRef.current;
+      if (videoTrack) {
+        videoTrack.stop();
+        localStreamRef.current.removeTrack(videoTrack);
+        const sender = pcRef.current
+          .getSenders()
+          .find((s) => s.track === videoTrack);
+        if (sender) pcRef.current.removeTrack(sender);
+        videoTrackRef.current = null;
+      }
+
+      if (localVideo.current) {
+        localVideo.current.srcObject = null;
+      }
+
+      setVideoEnabled(false);
+    }
   };
 
   const createOffer = async () => {
@@ -127,29 +172,26 @@ export default function WebRTCCall() {
   };
 
   const playAudio = () => {
-    if (remoteAudio.current) {
-      remoteAudio.current.play();
+    if (remoteVideo.current) {
+      remoteVideo.current.play();
     }
   };
 
   return (
     <div className="flex flex-col gap-4 items-center">
       <div className="flex gap-4">
-        {hasRemoteVideo && (
-          <video
-            ref={remoteVideo}
-            autoPlay
-            playsInline
-            width={240}
-            height={180}
-            style={{ background: "#222" }}
-          />
-        )}
-        <audio
-          ref={remoteAudio}
+        <video
+          ref={remoteVideo}
           autoPlay
           controls
           style={{ display: "block" }}
+        />
+        <video
+          ref={localVideo}
+          autoPlay
+          muted
+          playsInline
+          style={{ width: "240px", height: "180px", background: "#333" }}
         />
       </div>
 
@@ -162,6 +204,9 @@ export default function WebRTCCall() {
       <div className="flex gap-2 flex-wrap">
         <button className="btn-primary" onClick={start}>
           Start Mic
+        </button>
+        <button className="btn-primary" onClick={toggleVideo}>
+          {videoEnabled ? "Disable Video" : "Enable Video"}
         </button>
         <button className="btn-primary" onClick={createOffer}>
           Create Offer
