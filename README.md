@@ -1,6 +1,6 @@
-# dark-net
+# Dark Net
 
-**dark-net** is a next-generation social network focused on **intelligent communication**, **privacy**, and **user autonomy**. Powered by artificial intelligence, dark-net redefines how people interact online — smarter, safer, and more meaningful.
+**Dark Net** is a next-generation social network focused on **intelligent communication**, **privacy**, and **user autonomy**. Powered by artificial intelligence, dark-net redefines how people interact online — smarter, safer, and more meaningful.
 
 ### 🔍 Core Principles
 

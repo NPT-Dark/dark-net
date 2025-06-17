@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import WebRTCCall from "~/components/UI/webRTC";
 export const metadata: Metadata = {
   title: "Dark Net – The Future of Smart Social",
   description:
@@ -7,7 +8,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div className="flex w-full justify-between flex-1">
-      <div className="flex-1"></div>
+      <WebRTCCall />
     </div>
   );
 }
