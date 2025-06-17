@@ -8,37 +8,34 @@ export default function WebRTCCall() {
   const [offer, setOffer] = useState("");
   const [answer, setAnswer] = useState("");
   const [remoteSDP, setRemoteSDP] = useState("");
+  const [remoteMuted, setRemoteMuted] = useState(false);
 
   // Start local media: try video+audio, fallback to audio only
   const start = async () => {
     let stream: MediaStream | null = null;
     try {
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
+      // Chỉ lấy microphone, không lấy camera
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch (err) {
-      console.warn("Video not supported, trying audio only", err);
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      } catch (err2) {
-        console.error("Failed to get audio stream", err2);
-        alert("Không tìm thấy thiết bị camera hoặc microphone!");
-        return;
-      }
+      console.error("Error accessing media devices:", err);
+      alert("Không tìm thấy thiết bị microphone!");
+      return;
     }
-    if (localVideo.current && stream.getVideoTracks().length > 0) {
-      localVideo.current.srcObject = stream;
-    }
+    // Không cần xử lý video local
     const pc = new RTCPeerConnection();
     stream.getTracks().forEach((track) => pc.addTrack(track, stream));
     pc.ontrack = (event) => {
-      if (remoteVideo.current) remoteVideo.current.srcObject = event.streams[0];
+      if (remoteVideo.current) {
+        remoteVideo.current.srcObject = event.streams[0];
+        remoteVideo.current.muted = false;
+        remoteVideo.current.volume = 1;
+        setRemoteMuted(remoteVideo.current.muted);
+        console.log("Remote audio tracks:", event.streams[0].getAudioTracks());
+      }
     };
     pcRef.current = pc;
   };
 
-  // Create offer
   const createOffer = async () => {
     if (!pcRef.current) return;
     const offer = await pcRef.current.createOffer();
@@ -46,7 +43,6 @@ export default function WebRTCCall() {
     setOffer(JSON.stringify(offer));
   };
 
-  // Create answer
   const createAnswer = async () => {
     if (!pcRef.current) return;
     const remoteDesc = new RTCSessionDescription(JSON.parse(remoteSDP));
@@ -56,11 +52,19 @@ export default function WebRTCCall() {
     setAnswer(JSON.stringify(answer));
   };
 
-  // Set remote answer
   const setRemoteAnswer = async () => {
     if (!pcRef.current) return;
     const remoteDesc = new RTCSessionDescription(JSON.parse(remoteSDP));
     await pcRef.current.setRemoteDescription(remoteDesc);
+  };
+
+  // Nút để chủ động bật tiếng remote nếu bị mute do trình duyệt
+  const unmuteRemote = () => {
+    if (remoteVideo.current) {
+      remoteVideo.current.muted = false;
+      remoteVideo.current.volume = 1;
+      setRemoteMuted(false);
+    }
   };
 
   return (
@@ -84,6 +88,11 @@ export default function WebRTCCall() {
           style={{ background: "#222" }}
         />
       </div>
+      {remoteMuted && (
+        <button className="btn-primary" onClick={unmuteRemote}>
+          Unmute Remote
+        </button>
+      )}
       <div className="flex gap-2">
         <button className="btn-primary" onClick={start}>
           Start Camera/Mic
