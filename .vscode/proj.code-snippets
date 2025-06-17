@@ -1,0 +1,36 @@
+{
+  "Create Function Component": {
+    "prefix": "func",
+    "body": [
+      "import React from 'react';",
+      "",
+      "export default function ${1:ComponentName}(): React.ReactNode {",
+      "  return (",
+      "    <${2:div}>",
+      "      ${3:Content}",
+      "    </${2:div}>",
+      "  );",
+      "}"
+    ],
+    "description": "Tạo một Function Component trong TypeScript với React"
+  },
+  "React Functional Component": {
+    "prefix": "funcprops",
+    "body": [
+      "import React from 'react';",
+      "",
+      "interface ${1:Props} {",
+      "  ${2:propName}: ${3:string};",
+      "}",
+      "",
+      "export default function ${4:ComponentName}({ ${2:propName} }: ${1:Props}): React.ReactNode {",
+      "  return (",
+      "    <div>",
+      "      ${5:Content}",
+      "    </div>",
+      "  );",
+      "}"
+    ],
+    "description": "Snippet cho một React Functional Component trong TypeScript dưới dạng function"
+  }
+}

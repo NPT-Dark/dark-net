@@ -1,0 +1,30 @@
+"use client";
+
+import { useTheme } from "next-themes";
+import React, { useEffect, useState } from "react";
+import { MdDarkMode } from "react-icons/md";
+import { MdLightMode } from "react-icons/md";
+
+export default function ThemeControl(): React.ReactNode {
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  return (
+    <div
+      className="center-box h-full cursor-pointer"
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+    >
+      {theme === "dark" ? (
+        <MdLightMode className="text-yellow-500 text-3xl" />
+      ) : (
+        <MdDarkMode className="text-yellow-500 text-3xl" />
+      )}
+    </div>
+  );
+}

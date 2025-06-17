@@ -1,0 +1,7 @@
+@custom-variant dark (&:where(.dark, .dark *));
+@theme {
+  --color-primary: #121618;
+  --color-secondary: #29b1b2;
+  --color-third: #f1f6f9;
+  --spacing: 5px;
+}
