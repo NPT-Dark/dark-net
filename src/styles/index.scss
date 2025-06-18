@@ -1,5 +1,7 @@
 @use "tailwindcss";
 @use "./_tailwind" as *;
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
 
 html,
 body {
@@ -11,6 +13,13 @@ body {
 }
 .dark {
   color: var(--color-secondary);
+}
+a,
+button {
+  cursor: pointer;
+  * {
+    cursor: pointer;
+  }
 }
 .center-box {
   display: flex;
@@ -32,4 +41,21 @@ body {
   color: var(--color-third);
   background-color: var(--color-secondary);
   border-radius: 4px;
+}
+
+.glass {
+  background: var(--color-fifth);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  border: 1px solid var(--color-fifth);
+  box-shadow: 0 4px 30px var(--color-fifth);
+}
+
+.dark {
+  .glass {
+    background: var(--color-sixth);
+    border: 1px solid var(--color-sixth);
+    box-shadow: none;
+  }
 }

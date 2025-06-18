@@ -21,9 +21,9 @@ export default function ThemeControl(): React.ReactNode {
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
       {theme === "dark" ? (
-        <MdLightMode className="text-yellow-500 text-3xl" />
+        <MdLightMode className="text-yellow-400 text-3xl" />
       ) : (
-        <MdDarkMode className="text-yellow-500 text-3xl" />
+        <MdDarkMode className="text-yellow-400 text-3xl" />
       )}
     </div>
   );

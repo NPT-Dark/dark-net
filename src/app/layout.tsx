@@ -1,13 +1,12 @@
 import { ThemeProvider } from "next-themes";
 import Header from "~/components/layouts/header";
+import { Libre_Baskerville } from "next/font/google";
 import "~/styles/index.scss";
-import { Roboto } from "next/font/google";
 
-const roboto = Roboto({
+export const libreBaskerville = Libre_Baskerville({
+  weight: ["400", "700"],
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
   display: "swap",
-  variable: "--font-roboto",
 });
 
 export default function RootLayout({
@@ -16,13 +15,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={roboto.className} suppressHydrationWarning>
-      <body className="bg-third dark:bg-primary flex flex-col items-stretch">
+    <html
+      lang="en"
+      className={libreBaskerville.className}
+      suppressHydrationWarning
+    >
+      <body className="bg-third dark:bg-primary flex flex-col items-stretch max-w-[1920px] overflow-hidden px-10 mx-auto">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Header />
-          <main className="container mx-auto flex-1 flex items-stretch">
-            {children}
-          </main>
+          <main className="mx-auto flex-1 flex items-stretch">{children}</main>
         </ThemeProvider>
       </body>
     </html>
