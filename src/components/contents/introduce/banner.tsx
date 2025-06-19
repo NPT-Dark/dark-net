@@ -28,8 +28,8 @@ export default function BannerIntro(): React.ReactNode {
             initial={{ scale: 0 }}
             animate={{ scale: [0, 1.02, 1] }}
             transition={{
-              delay: index * 0.5,
-              duration: 0.8,
+              delay: index * 0.2,
+              duration: 0.7,
               times: [0, 0.7, 1],
               ease: "easeInOut",
             }}

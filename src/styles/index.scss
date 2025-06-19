@@ -52,6 +52,15 @@ button {
   box-shadow: 0 4px 30px var(--color-fifth);
 }
 
+.hidden-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 .dark {
   .glass {
     background: var(--color-sixth);
