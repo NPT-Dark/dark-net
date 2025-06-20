@@ -20,7 +20,7 @@ export default function RootLayout({
       className={libreBaskerville.className}
       suppressHydrationWarning
     >
-      <body className="bg-third dark:bg-primary flex flex-col items-stretch max-w-[1920px] px-10 mx-auto">
+      <body className="bg-third dark:bg-primary flex flex-col items-stretch max-w-[1920px] px-10 mx-auto max-md:px-5">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Header />
           <main className="mx-auto flex-1 flex items-stretch">{children}</main>

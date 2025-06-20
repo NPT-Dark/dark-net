@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 
 export function useActiveSection(
   ids: string[],
-  containerId: string
+  containerId: string,
+  pathName: string
 ): string | null {
   const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
     const container = document.getElementById(containerId);
-    if (!container) return;
+    if (!container) return setActiveId(null);
 
     function onScroll() {
       let found: string | null = null;
@@ -24,6 +25,9 @@ export function useActiveSection(
           }
         }
       }
+      if (activeId !== found) {
+        history.replaceState(null, "", `#${found}`);
+      }
       setActiveId(found);
     }
 
@@ -34,7 +38,7 @@ export function useActiveSection(
       container.removeEventListener("scroll", onScroll);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ids, containerId]);
+  }, [ids, containerId, pathName]);
 
   return activeId;
 }

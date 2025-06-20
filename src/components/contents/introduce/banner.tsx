@@ -1,25 +1,11 @@
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
-export default function BannerIntro(): React.ReactNode {
-  const listImage: { label: string; image: string }[] = [
-    {
-      label: "Online Call",
-      image: "banner-1.webp",
-    },
-    {
-      label: "Security",
-      image: "banner-2.webp",
-    },
-    {
-      label: "AI Chat",
-      image: "banner-3.webp",
-    },
-    {
-      label: "Social",
-      image: "banner-4.webp",
-    },
-  ];
+export default function BannerIntro({
+  listImage,
+}: {
+  listImage: { label: string; image: string }[];
+}): React.ReactNode {
   return (
     <div className="flex-1 w-full justify-center hidden lg:flex">
       <div className="h-full w-2/3 grid grid-cols-2 grid-rows-2 gap-4 aspect-square">

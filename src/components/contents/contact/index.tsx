@@ -8,7 +8,7 @@ export default function Contact(): React.ReactNode {
   return (
     <section
       id="contact"
-      className="h-screen w-full snap-start max-h-[1080px] flex flex-col items-center justify-center"
+      className="h-screen w-full snap-start max-h-[1500px] flex flex-col items-center justify-center"
     >
       <motion.div
         initial={{ opacity: 0, scale: 0, rotate: 90 }}
@@ -18,15 +18,17 @@ export default function Contact(): React.ReactNode {
           ease: "easeOut",
         }}
         viewport={{ once: true, amount: 0.3 }}
-        className="flex flex-col items-center justify-center"
+        className="flex flex-col items-center justify-center max-md:items-start"
       >
-        <h2 className="text-5xl mb-5">Contact Us</h2>
+        <h2 className="text-5xl mb-5 max-md:text-3xl max-2sm:mb-3">
+          Contact Us
+        </h2>
         <p>
           Have questions or need support? Feel free to reach out — we’re here to
           help.
         </p>
         <p>You can contact us through the following channels:</p>
-        <div className="grid grid-cols-2 mt-5 gap-5">
+        <div className="grid grid-cols-2 mt-5 gap-5 max-2sm:gap-3 max-2sm:mt-3">
           <Link
             href="tel:+84 034 8257 483"
             className="border border-sixth p-2 rounded-lg flex items-center justify-center gap-2 hover:scale-105 transition duration-300 ease-in-out dark:border-secondary"

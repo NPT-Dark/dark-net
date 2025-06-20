@@ -86,7 +86,7 @@ export default function Plans(): React.ReactNode {
   return (
     <section
       id="plans"
-      className="h-screen flex flex-col gap-5 justify-center items-center w-full snap-start max-h-[1080px]"
+      className="h-screen flex flex-col gap-5 justify-center items-center w-full snap-start max-h-[1500px]"
     >
       <h2 className="text-5xl">Our Plans</h2>
       <p className="text-sm max-w-1/2 text-center">

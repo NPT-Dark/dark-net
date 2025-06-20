@@ -13,8 +13,7 @@ export default function ThemeControl(): React.ReactNode {
     setMounted(true);
   }, []);
 
-  if (!mounted) return null;
-
+  if (!mounted) return <MdDarkMode className="text-yellow-400 text-3xl" />;
   return (
     <div
       className="center-box h-full cursor-pointer"

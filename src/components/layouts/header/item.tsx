@@ -21,9 +21,9 @@ export default function Item({
     : "border-transparent";
   const classIcon = icon ? "flex items-start gap-1" : "";
   return (
-    <Link href={hash} className={clsx(classIcon, classItem, classActive)}>
-      {icon}
-      <label>{label}</label>
+    <Link href={"/" + hash} className={clsx(classIcon, classItem, classActive)}>
+      <span className="max-md:hidden">{icon}</span>
+      <label className="max-md:text-sm">{label}</label>
     </Link>
   );
 }

@@ -4,8 +4,8 @@ import { FcGoogle } from "react-icons/fc";
 export default function SignInForm() {
   return (
     <div className="flex items-center justify-center p-4">
-      <div className="min-w-[500px] w-full rounded-2xl overflow-hidden shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] dark:shadow-sixth">
-        <div className="bg-gradient-to-r from-[#121618] to-[#1e2528] p-10 text-center relative mb-5">
+      <div className="min-w-[500px] w-full rounded-2xl overflow-hidden shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] dark:shadow-fifth dark:bg-gray-30">
+        <div className="bg-gradient-to-r from-[#121618] to-[#1e2528] p-10 text-center relative mb-5 dark:from-[#1e2528]">
           <h1 className="text-3xl font-bold text-third relative">
             Welcome back
           </h1>
