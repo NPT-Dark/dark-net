@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { RiArrowDownSFill } from "react-icons/ri";
+import { RiArrowDownSFill, RiArrowUpSFill } from "react-icons/ri";
 export default function ListFeatureResponsive({
   data,
 }: {
@@ -25,7 +25,11 @@ export default function ListFeatureResponsive({
               <span className="text-[20px]">{item.icon}</span>
               <h3 className="text-nowrap text-lg">{item.title}</h3>
             </div>
-            <RiArrowDownSFill size={30} />
+            {openIndex === index ? (
+              <RiArrowUpSFill size={30} />
+            ) : (
+              <RiArrowDownSFill size={30} />
+            )}
           </div>
           <motion.div
             initial={false}
@@ -35,7 +39,7 @@ export default function ListFeatureResponsive({
                 : { height: 0, opacity: 0, marginTop: 0 }
             }
             transition={{ duration: 0.3 }}
-            style={{ overflow: "hidden" }}
+            className="overflow-hidden"
           >
             <label className="text-sm block">{item.description}</label>
           </motion.div>

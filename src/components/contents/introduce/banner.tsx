@@ -30,6 +30,7 @@ export default function BannerIntro({
             <Image
               src={`/images/banner-intro/${item.image}`}
               fill
+              sizes="100%"
               alt={item.label}
               className="size-full object-cover rounded-2xl"
             />
