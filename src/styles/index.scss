@@ -60,7 +60,19 @@ button {
     display: none;
   }
 }
-
+.custom-scroll {
+  &::-webkit-scrollbar {
+    width: 4px;
+    background: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-secondary);
+    border-radius: 8px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
+  }
+}
 .dark {
   .glass {
     background: var(--color-sixth);

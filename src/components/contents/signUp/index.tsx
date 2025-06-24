@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { FaLock, FaUser } from "react-icons/fa";
 import { ImProfile } from "react-icons/im";

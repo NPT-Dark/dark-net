@@ -15,6 +15,7 @@ export default function Header(): React.ReactNode {
     "container",
     pathName
   );
+  if (pathName === "/home") return null;
   const listItem: {
     label: string;
     hash: string;
