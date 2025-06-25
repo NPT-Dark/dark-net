@@ -74,7 +74,7 @@ export default function SideLeft(): React.ReactNode {
                 </div>
                 <p className="text-nowrap font-medium text-sm">{name}</p>
               </div>
-              <button className="text-[15px] bg-secondary rounded-lg h-fit p-1 text-white hover:scale-105 transition-all duration-300">
+              <button className="text-[15px] bg-secondary rounded-lg h-fit p-1 text-white active:scale-95 transition-all duration-300">
                 <IoPersonAdd />
               </button>
             </div>

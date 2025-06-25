@@ -54,7 +54,7 @@ export default function SideRight(): React.ReactNode {
   const ItemChat = ({ key }: { key: number }) => (
     <div
       key={key}
-      className="flex items-center justify-between shadow-sm border shadow-gray-100 border-gray-100 rounded-lg p-2 dark:shadow-none dark:border-secondary"
+      className="flex items-center justify-between shadow-sm border shadow-gray-100 border-gray-100 rounded-lg p-2 dark:shadow-none dark:border-secondary cursor-pointer active:scale-95 transition-all duration-300"
     >
       <div className="flex flex-col gap-1">
         <div className="flex items-center gap-2">
