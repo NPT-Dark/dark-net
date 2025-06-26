@@ -80,40 +80,43 @@ export default function SideRight(): React.ReactNode {
     </div>
   );
   return (
-    <div className="h-full flex flex-col shadow-all pb-5 overflow-hidden rounded-md items-start min-w-[350px] max-w-[350px] w-full gap-3 min-h-2/3 max-h-[calc(100vh-150px)] dark:shadow-none dark:border">
-      <div className="w-full h-full flex flex-col items-stretch justify-stretch gap-3">
-        <div className="w-full flex items-center justify-between cursor-pointer pt-5 px-5">
-          <div className="flex items-center gap-2">
-            <BiSolidContact size={30} className="text-secondary" />
-            Contacts
+    <>
+      <div className="min-w-[350px] max-w-[350px] w-full h-[calc(100vh-150px)]" />
+      <div className="flex flex-col shadow-all pb-5 overflow-hidden rounded-md items-start min-w-[350px] max-w-[350px] w-full gap-3 h-[calc(100vh-150px)] dark:shadow-none dark:border fixed right-[max(0px,calc((100vw-1920px)/2)+50px)] max-md:right-[max(0px,calc((100vw-1920px)/2)+25px)]">
+        <div className="w-full h-full flex flex-col items-stretch justify-stretch gap-3">
+          <div className="w-full flex items-center justify-between cursor-pointer pt-5 px-5">
+            <div className="flex items-center gap-2">
+              <BiSolidContact size={30} className="text-secondary" />
+              Contacts
+            </div>
+            {/* <DropdownRadio /> */}
           </div>
-          {/* <DropdownRadio /> */}
-        </div>
-        <div className="flex-1 min-h-0 overflow-y-auto custom-scroll w-full">
-          <div className="w-full flex flex-col gap-3 px-5">
-            {selectedType === SideRightType.CHAT
-              ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((_, key) =>
-                  ItemChat({ key: key })
-                )
-              : null}
-            {selectedType === SideRightType.GROUP
-              ? [1, 2, 3].map((_, key) =>
-                  ItemGroup({
-                    key: key,
-                  })
-                )
-              : null}
-            {selectedType === SideRightType.RELATED_CALL
-              ? [1, 2, 3].map((_, key) =>
-                  ItemGroup({
-                    key: key,
-                    IsCall: true,
-                  })
-                )
-              : null}
+          <div className="flex-1 min-h-0 overflow-y-auto custom-scroll w-full">
+            <div className="w-full flex flex-col gap-3 px-5">
+              {selectedType === SideRightType.CHAT
+                ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((_, key) =>
+                    ItemChat({ key: key })
+                  )
+                : null}
+              {selectedType === SideRightType.GROUP
+                ? [1, 2, 3].map((_, key) =>
+                    ItemGroup({
+                      key: key,
+                    })
+                  )
+                : null}
+              {selectedType === SideRightType.RELATED_CALL
+                ? [1, 2, 3].map((_, key) =>
+                    ItemGroup({
+                      key: key,
+                      IsCall: true,
+                    })
+                  )
+                : null}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

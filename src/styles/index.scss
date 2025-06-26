@@ -80,3 +80,19 @@ button {
     box-shadow: none;
   }
 }
+
+.slider-review {
+  * {
+    outline: none !important;
+  }
+  .slick-dots li {
+    bottom: -40px !important;
+    width: unset !important;
+    height: unset !important;
+  }
+}
+
+.slick-dots.slick-thumb li.slick-active a .thumb-img {
+  border: 2px solid var(--color-secondary);
+  border-radius: 8px;
+}
