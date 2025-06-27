@@ -85,6 +85,15 @@ export default function SignInForm() {
           <button
             type="submit"
             className="w-full py-3 px-4 max-lg:py-2 text-third font-medium rounded-lg mb-6 shadow-md bg-secondary hover:-translate-y-[2px] hover:shadow-[0_5px_15px_-3px_rgba(41,177,178,0.4)] transition-all duration-300 ease-in-out max-lg:mb-2"
+            onClick={async () => {
+              const rs = await signIn("credentials", {
+                username: "nguyenphattai24",
+                password:
+                  "$2b$10$Uv8rh3hlnJ0Vnv9wz.lnCeR2/EUbHbm2Zf1cVoh9Gt.nVKemQpu3.",
+                callbackUrl: "/home",
+              });
+              console.log(rs);
+            }}
           >
             Sign In
           </button>

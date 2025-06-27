@@ -2,8 +2,31 @@
 import Link from "next/link";
 import { FaLock, FaUser } from "react-icons/fa";
 import { ImProfile } from "react-icons/im";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SignUpFormData, signUpSchema } from "~/schemas/user";
+import { createUserAction } from "~/actions/user";
 
 export default function SignUpForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignUpFormData>({
+    resolver: zodResolver(signUpSchema),
+  });
+
+  async function onSubmit(data: SignUpFormData) {
+    try {
+      const rs = await createUserAction(data);
+      console.log(rs);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+    }
+  }
+
   return (
     <div className="mx-auto flex items-center justify-center p-4 max-lg:p-0 max-lg:flex-1 max-lg:w-full max-w-[500px]">
       <div className="min-w-[500px] w-full rounded-2xl overflow-hidden shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] dark:shadow-fifth dark:bg-gray-30 max-lg:min-w-[400px] max-sm:min-w-full">
@@ -15,7 +38,12 @@ export default function SignUpForm() {
             Sign up with your social account
           </p>
         </div>
-        <form className="px-8 pb-8 max-lg:px-3 max-lg:pb-3 max-lg:text-sm">
+
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="px-8 pb-8 max-lg:px-3 max-lg:pb-3 max-lg:text-sm"
+        >
+          {/* Display Name */}
           <div className="mb-6 max-lg:mb-2">
             <label
               htmlFor="display-name"
@@ -29,12 +57,19 @@ export default function SignUpForm() {
               </div>
               <input
                 id="display-name"
+                {...register("displayName")}
                 className="pl-10 w-full px-4 py-3 max-lg:pl-7 max-lg:py-2 border border-sixth rounded-lg focus:outline-none focus:border-secondary"
                 placeholder="Display Name"
-                required
               />
             </div>
+            {errors.displayName && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.displayName.message}
+              </p>
+            )}
           </div>
+
+          {/* Username */}
           <div className="mb-6 max-lg:mb-2">
             <label
               htmlFor="username"
@@ -48,13 +83,20 @@ export default function SignUpForm() {
               </div>
               <input
                 id="username"
+                {...register("username")}
                 className="pl-10 w-full px-4 py-3 max-lg:pl-7 max-lg:py-2 border border-sixth rounded-lg focus:outline-none focus:border-secondary"
                 placeholder="Username"
                 autoComplete="username"
-                required
               />
             </div>
+            {errors.username && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.username.message}
+              </p>
+            )}
           </div>
+
+          {/* Password */}
           <div className="mb-8 max-lg:mb-3">
             <label
               htmlFor="password"
@@ -69,13 +111,20 @@ export default function SignUpForm() {
               <input
                 type="password"
                 id="password"
+                {...register("password")}
                 className="pl-10 w-full px-4 py-3 max-lg:pl-7 max-lg:py-2 border border-sixth rounded-lg focus:outline-none focus:border-secondary"
                 placeholder="Password"
                 autoComplete="new-password"
-                required
               />
             </div>
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
+
+          {/* Confirm Password */}
           <div className="mb-8 max-lg:mb-3">
             <label
               htmlFor="confirm-password"
@@ -90,22 +139,29 @@ export default function SignUpForm() {
               <input
                 type="password"
                 id="confirm-password"
+                {...register("confirmPassword")}
                 className="pl-10 w-full px-4 py-3 max-lg:pl-7 max-lg:py-2 border border-sixth rounded-lg focus:outline-none focus:border-secondary"
                 placeholder="Confirm Password"
                 autoComplete="new-password"
-                required
               />
             </div>
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.confirmPassword.message}
+              </p>
+            )}
           </div>
+
           <button
             type="submit"
             className="w-full py-3 px-4 max-lg:py-2 text-third font-medium rounded-lg shadow-md bg-secondary hover:-translate-y-[2px] hover:shadow-[0_5px_15px_-3px_rgba(41,177,178,0.4)] transition-all duration-300 ease-in-out"
           >
             Sign Up
           </button>
+
           <div className="mt-6 text-center text-sm max-lg:mt-2 max-lg:!text-[13px]">
             <p className="text-gray-600 dark:text-fifth">
-              {`Already have an account?`}
+              Already have an account?
               <Link href="/sign-in" className="font-medium text-[#29b1b2]">
                 {" "}
                 Sign in
