@@ -19,6 +19,9 @@ export default function ChatPopup(): React.ReactNode {
         message: "Your device not found!",
       });
     }
+    const { stream, pc, ice } = dataCall;
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
     socket.emit("call", {
       userId: id,
       ice: dataCall.ice,
