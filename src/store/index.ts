@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import reviewImgReducer from "./slices/reviewImgSlice";
+import chatPopUpReducer from "./slices/chatPopup";
 
 export const store = configureStore({
   reducer: {
     reviewImg: reviewImgReducer,
+    chatPopup: chatPopUpReducer,
   },
 });
 

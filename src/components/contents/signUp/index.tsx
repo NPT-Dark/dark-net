@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignUpFormData, signUpSchema } from "~/schemas/user";
 import { createUserAction } from "~/actions/user";
+import InputField from "~/components/ui/inputField";
 
 export default function SignUpForm() {
   const {
@@ -38,119 +39,51 @@ export default function SignUpForm() {
             Sign up with your social account
           </p>
         </div>
-
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="px-8 pb-8 max-lg:px-3 max-lg:pb-3 max-lg:text-sm"
         >
-          {/* Display Name */}
-          <div className="mb-6 max-lg:mb-2">
-            <label
-              htmlFor="display-name"
-              className="block text-primary dark:text-third font-medium mb-2 max-lg:mb-1"
-            >
-              Display Name
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <ImProfile className="h-5 w-5 max-lg:size-3 text-gray-400" />
-              </div>
-              <input
-                id="display-name"
-                {...register("displayName")}
-                className="pl-10 w-full px-4 py-3 max-lg:pl-7 max-lg:py-2 border border-sixth rounded-lg focus:outline-none focus:border-secondary"
-                placeholder="Display Name"
-              />
-            </div>
-            {errors.displayName && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.displayName.message}
-              </p>
-            )}
-          </div>
+          <InputField
+            id="display-name"
+            label="Display Name"
+            placeholder="Display Name"
+            auto_complete="name"
+            icon={<ImProfile className="size-full" />}
+            register={register("displayName")}
+            error={errors.displayName?.message}
+          />
 
-          {/* Username */}
-          <div className="mb-6 max-lg:mb-2">
-            <label
-              htmlFor="username"
-              className="block text-primary dark:text-third font-medium mb-2 max-lg:mb-1"
-            >
-              Username
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaUser className="h-5 w-5 max-lg:size-3 text-gray-400" />
-              </div>
-              <input
-                id="username"
-                {...register("username")}
-                className="pl-10 w-full px-4 py-3 max-lg:pl-7 max-lg:py-2 border border-sixth rounded-lg focus:outline-none focus:border-secondary"
-                placeholder="Username"
-                autoComplete="username"
-              />
-            </div>
-            {errors.username && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.username.message}
-              </p>
-            )}
-          </div>
+          <InputField
+            id="username"
+            label="Username"
+            placeholder="Username"
+            auto_complete="username"
+            icon={<FaUser className="size-full" />}
+            register={register("username")}
+            error={errors.username?.message}
+          />
 
-          {/* Password */}
-          <div className="mb-8 max-lg:mb-3">
-            <label
-              htmlFor="password"
-              className="block text-primary dark:text-third font-medium mb-2 max-lg:mb-1"
-            >
-              Password
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaLock className="h-5 w-5 text-gray-400 max-lg:size-3" />
-              </div>
-              <input
-                type="password"
-                id="password"
-                {...register("password")}
-                className="pl-10 w-full px-4 py-3 max-lg:pl-7 max-lg:py-2 border border-sixth rounded-lg focus:outline-none focus:border-secondary"
-                placeholder="Password"
-                autoComplete="new-password"
-              />
-            </div>
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.password.message}
-              </p>
-            )}
-          </div>
+          <InputField
+            id="password"
+            type="password"
+            label="Password"
+            placeholder="Password"
+            auto_complete="new-password"
+            icon={<FaLock className="size-full" />}
+            register={register("password")}
+            error={errors.password?.message}
+          />
 
-          {/* Confirm Password */}
-          <div className="mb-8 max-lg:mb-3">
-            <label
-              htmlFor="confirm-password"
-              className="block text-primary dark:text-third font-medium mb-2 max-lg:mb-1"
-            >
-              Confirm Password
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaLock className="h-5 w-5 text-gray-400 max-lg:size-3" />
-              </div>
-              <input
-                type="password"
-                id="confirm-password"
-                {...register("confirmPassword")}
-                className="pl-10 w-full px-4 py-3 max-lg:pl-7 max-lg:py-2 border border-sixth rounded-lg focus:outline-none focus:border-secondary"
-                placeholder="Confirm Password"
-                autoComplete="new-password"
-              />
-            </div>
-            {errors.confirmPassword && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.confirmPassword.message}
-              </p>
-            )}
-          </div>
+          <InputField
+            id="confirm-password"
+            type="password"
+            label="Confirm Password"
+            placeholder="Confirm Password"
+            auto_complete="new-password"
+            icon={<FaLock className="size-full" />}
+            register={register("confirmPassword")}
+            error={errors.confirmPassword?.message}
+          />
 
           <button
             type="submit"

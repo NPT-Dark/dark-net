@@ -7,6 +7,7 @@ const libreBaskerville = Libre_Baskerville({
   weight: ["400", "700"],
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-libre-baskerville",
 });
 
 export default function RootLayout({
@@ -17,7 +18,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={libreBaskerville.className}
+      className={`${libreBaskerville.variable}`}
       suppressHydrationWarning
     >
       <body className="bg-third dark:bg-primary flex flex-col items-stretch max-w-[1920px] px-10 mx-auto max-md:px-5 custom-scroll">

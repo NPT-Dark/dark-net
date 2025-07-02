@@ -11,9 +11,6 @@ const UserSchema = new mongoose.Schema({
   },
   username: {
     type: String,
-    unique: true,
-    sparse: true,
-    default: null,
   },
   password: {
     type: String,
@@ -21,9 +18,6 @@ const UserSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    unique: true,
-    sparse: true,
-    default: null,
   },
   profileImage: {
     type: String,
@@ -43,6 +37,22 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
+UserSchema.index(
+  { username: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { username: { $exists: true, $type: "string" } },
+  }
+);
+UserSchema.index(
+  { email: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { email: { $exists: true, $type: "string" } },
+  }
+);
+
 export const UserModel =
   mongoose.models.User || mongoose.model("User", UserSchema);
+
 export type UserType = InferSchemaType<typeof UserSchema> & Document;

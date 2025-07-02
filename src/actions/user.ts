@@ -8,14 +8,10 @@ import { SignUpFormData } from "~/schemas/user";
 async function createUserAction(user: SignUpFormData) {
   try {
     await connectDB();
-
     const hashPassword = await hashCode(user.password);
-
     const userCreate = { ...user, password: hashPassword };
     const rs = await UserModel.create(userCreate);
-
     if (!rs) return responseError();
-
     return responseSuccess("Created user successfully");
   } catch (err: unknown) {
     console.log("Create user error:", err);
@@ -51,4 +47,16 @@ async function loginUser(user: {
   }
 }
 
-export { createUserAction, loginUser };
+async function getListUserAction() {
+  try {
+    await connectDB();
+    const rs = await UserModel.find({}, { password: 0 });
+    if (!rs) return [];
+    return rs;
+  } catch (err: unknown) {
+    console.log("Get list user error:", err);
+    return [];
+  }
+}
+
+export { createUserAction, loginUser, getListUserAction };

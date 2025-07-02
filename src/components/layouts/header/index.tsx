@@ -3,11 +3,11 @@ import React from "react";
 import ThemeControl from "../theme";
 import Image from "next/image";
 import Link from "next/link";
-import { HiHome } from "react-icons/hi";
 import { useActiveSection } from "~/hooks/useSession";
 import Item from "./item";
 import { usePathname } from "next/navigation";
 import { FaSignInAlt } from "react-icons/fa";
+import { listItem } from "./header.data";
 export default function Header(): React.ReactNode {
   const pathName = usePathname();
   const idActive = useActiveSection(
@@ -16,23 +16,6 @@ export default function Header(): React.ReactNode {
     pathName
   );
   if (pathName === "/home") return null;
-  const listItem: {
-    label: string;
-    hash: string;
-    id: string;
-    icon?: React.ReactNode;
-  }[] = [
-    {
-      label: "Home",
-      hash: "#introduce",
-      id: "introduce",
-      icon: <HiHome size={20} />,
-    },
-    { label: "Features", hash: "#features", id: "features" },
-    { label: "About", hash: "#about", id: "about" },
-    { label: "Plans", hash: "#plans", id: "plans" },
-    { label: "Contact", hash: "#contact", id: "contact" },
-  ];
   return (
     <>
       <header className="fixed w-full flex justify-center left-0 top-0 z-50 h-[98px] max-2md:h-auto">

@@ -1,10 +1,45 @@
 "use client";
-import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { getSession, signIn } from "next-auth/react";
 import { FaFacebook, FaLock, FaUser } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { useForm } from "react-hook-form";
+import InputField from "~/components/ui/inputField";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SignInFormData, signInSchema } from "~/schemas/user";
+import { toastError, toastUser } from "~/components/ui/toastGlobal";
+import { useRouter } from "next/navigation";
 
 export default function SignInForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInFormData>({
+    resolver: zodResolver(signInSchema),
+  });
+  const router = useRouter();
+  const onSubmit = async (data: SignInFormData) => {
+    const res = await signIn("credentials", {
+      redirect: false,
+      ...data,
+    });
+    if (res?.ok) {
+      const session = await getSession();
+      if (session && session.user) {
+        toastUser({ session, id: "sign-in-success" });
+        setTimeout(() => {
+          router.push("/home");
+        }, 3000);
+      }
+    } else {
+      toastError({
+        message: "Invalid username or password",
+        id: "sign-in-error",
+      });
+    }
+  };
+
   return (
     <div className="mx-auto flex items-center justify-center p-4 max-lg:p-0 max-lg:flex-1 max-lg:w-full max-w-[500px]">
       <div className="min-w-[500px] w-full rounded-2xl overflow-hidden shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] dark:shadow-fifth dark:bg-gray-30 max-lg:min-w-[400px] max-sm:min-w-full">
@@ -16,48 +51,36 @@ export default function SignInForm() {
             Login with your social account
           </p>
         </div>
-        <form className="px-8 pb-8 max-lg:px-3 max-lg:pb-3 max-lg:text-sm">
-          <div className="mb-6 max-lg:mb-2">
-            <label
-              htmlFor="username"
-              className="block text-primary dark:text-third font-medium mb-2 max-lg:mb-1"
-            >
-              Username
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaUser className="h-5 w-5 max-lg:size-3 text-gray-400" />
-              </div>
-              <input
-                id="username"
-                className="pl-10 w-full px-4 py-3 max-lg:pl-7 max-lg:py-2 border border-sixth rounded-lg focus:outline-none focus:border-secondary"
-                placeholder="Username"
-                autoComplete="usename"
-                required
-              />
-            </div>
-          </div>
-          <div className="mb-8 max-lg:mb-3">
-            <label
-              htmlFor="password"
-              className="block text-primary dark:text-third font-medium mb-2 max-lg:mb-1"
-            >
-              Password
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaLock className="h-5 w-5 text-gray-400 max-lg:size-3" />
-              </div>
-              <input
-                type="password"
-                id="password"
-                className="pl-10 w-full px-4 py-3 max-lg:pl-7 max-lg:py-2 border border-sixth rounded-lg focus:outline-none focus:border-secondary"
-                placeholder="Password"
-                autoComplete="current-password"
-                required
-              />
-            </div>
-          </div>
+
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="px-8 pb-8 max-lg:px-3 max-lg:pb-3 max-lg:text-sm"
+        >
+          <InputField
+            id="username"
+            label="Username"
+            placeholder="Username"
+            auto_complete="username"
+            icon={<FaUser className="size-full" />}
+            register={register("username", {
+              required: "Username is required",
+            })}
+            error={errors.username?.message}
+          />
+
+          <InputField
+            id="password"
+            type="password"
+            label="Password"
+            placeholder="Password"
+            auto_complete="current-password"
+            icon={<FaLock className="size-full" />}
+            register={register("password", {
+              required: "Password is required",
+            })}
+            error={errors.password?.message}
+          />
+
           <div className="flex items-center justify-between mb-6 max-lg:mb-2">
             <div className="flex items-center">
               <input
@@ -82,21 +105,14 @@ export default function SignInForm() {
               </a>
             </div>
           </div>
+
           <button
             type="submit"
             className="w-full py-3 px-4 max-lg:py-2 text-third font-medium rounded-lg mb-6 shadow-md bg-secondary hover:-translate-y-[2px] hover:shadow-[0_5px_15px_-3px_rgba(41,177,178,0.4)] transition-all duration-300 ease-in-out max-lg:mb-2"
-            onClick={async () => {
-              const rs = await signIn("credentials", {
-                username: "nguyenphattai24",
-                password:
-                  "$2b$10$Uv8rh3hlnJ0Vnv9wz.lnCeR2/EUbHbm2Zf1cVoh9Gt.nVKemQpu3.",
-                callbackUrl: "/home",
-              });
-              console.log(rs);
-            }}
           >
             Sign In
           </button>
+
           <div className="relative mb-6 max-lg:mb-2">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300"></div>
@@ -107,30 +123,26 @@ export default function SignInForm() {
               </span>
             </div>
           </div>
+
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
               className="flex items-center justify-center py-2.5 px-4 border border-gray-300 rounded-lg font-medium text-primary dark:text-third focus:outline-none max-lg:py-1 relative overflow-hidden transition-all duration-300 ease-in-out"
-              onClick={() => {
-                signIn("google", { callbackUrl: "/home" });
-              }}
+              onClick={() => signIn("google", { callbackUrl: "/home" })}
             >
               <FcGoogle className="w-5 h-5 mr-2" />
               Google
-              <span className="absolute inset-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-third/20 to-transparent transition-all duration-500 ease-in-out"></span>
             </button>
             <button
               type="button"
               className="flex items-center justify-center py-2.5 max-lg:py-1 px-4 bg-[#3b5998] text-third rounded-lg font-medium focus:outline-none relative overflow-hidden transition-all duration-300 ease-in-out"
-              onClick={() => {
-                signIn("facebook", { callbackUrl: "/home" });
-              }}
+              onClick={() => signIn("facebook", { callbackUrl: "/home" })}
             >
               <FaFacebook className="w-5 h-5 mr-2" />
               Facebook
-              <span className="absolute inset-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-third/20 to-transparent transition-all duration-500 ease-in-out"></span>
             </button>
           </div>
+
           <div className="mt-6 text-center text-sm max-lg:mt-2 max-lg:!text-[13px]">
             <p className="text-gray-600 dark:text-fifth">
               {`Don't have an account?`}

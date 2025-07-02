@@ -13,8 +13,8 @@ import { IoPersonAdd } from "react-icons/io5";
 
 export default function SideLeft(): React.ReactNode {
   const { data } = useSession();
-  const avatar = data?.user?.image || null;
-  const name = data?.user?.name || null;
+  const avatar = data?.user?.profileImage || null;
+  const name = data?.user?.displayName || null;
   return (
     <>
       <div className="min-w-[350px] max-w-[350px] w-full" />
@@ -85,7 +85,7 @@ export default function SideLeft(): React.ReactNode {
         </div>
         <div className="w-full gap-5 shadow-all p-5 rounded-md flex flex-col dark:shadow-none dark:border">
           <div className="flex items-center gap-2 cursor-pointer">
-            <FaUserFriends className="text-red-500" size={20} />
+            <FaUserFriends className="text-error" size={20} />
             <p>Friends List</p>
           </div>
           <div className="flex items-center gap-2 cursor-pointer">

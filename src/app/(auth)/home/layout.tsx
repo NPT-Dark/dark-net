@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import ChatPopup from "~/components/layouts/chatPopup";
 import HeaderHome from "~/components/layouts/home/header";
 import SideLeft from "~/components/layouts/home/sideLeft";
 import SideRight from "~/components/layouts/home/sideRight";
@@ -24,6 +25,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </div>
         </div>
         <ReviewImg />
+        <ChatPopup />
       </StoreProvider>
     </WrapperSession>
   );

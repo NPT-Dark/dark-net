@@ -1,14 +1,15 @@
 import clsx from "clsx";
 import Link from "next/link";
 import React from "react";
+import { IconType } from "react-icons";
 
 export default function Item({
-  icon,
+  iconLabel,
   hash,
   active,
   label,
 }: {
-  icon?: React.ReactNode;
+  iconLabel?: IconType;
   id: string;
   hash: string;
   active: boolean;
@@ -19,10 +20,14 @@ export default function Item({
   const classActive = active
     ? "border-gray-300 bg-white dark:bg-transparent dark:border-secondary"
     : "border-transparent";
-  const classIcon = icon ? "flex items-start gap-1" : "";
+  const classIcon = iconLabel ? "flex items-start gap-1" : "";
   return (
     <Link href={"/" + hash} className={clsx(classIcon, classItem, classActive)}>
-      <span className="max-md:hidden">{icon}</span>
+      {iconLabel ? (
+        <span className="max-md:hidden">
+          {React.createElement(iconLabel, { size: 20 })}
+        </span>
+      ) : null}
       <label className="max-md:text-sm">{label}</label>
     </Link>
   );

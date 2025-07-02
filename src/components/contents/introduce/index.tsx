@@ -3,33 +3,7 @@ import { CiLocationArrow1 } from "react-icons/ci";
 import BannerIntro from "./banner";
 import Link from "next/link";
 import BannerIntroResponsive from "./bannerResponsive";
-import { IoIosCall } from "react-icons/io";
-import { MdOutlineSecurity } from "react-icons/md";
-import { RiRobot2Fill } from "react-icons/ri";
-import { IoPeopleCircleSharp } from "react-icons/io5";
 export default function Introduce(): React.ReactNode {
-  const listImage: { label: string; image: string; icon: React.ReactNode }[] = [
-    {
-      label: "Online Call",
-      image: "banner-1.webp",
-      icon: <IoIosCall size={20} />,
-    },
-    {
-      label: "Security",
-      image: "banner-2.webp",
-      icon: <MdOutlineSecurity size={20} />,
-    },
-    {
-      label: "AI Chat",
-      image: "banner-3.webp",
-      icon: <RiRobot2Fill size={20} />,
-    },
-    {
-      label: "Social",
-      image: "banner-4.webp",
-      icon: <IoPeopleCircleSharp size={20} />,
-    },
-  ];
   return (
     <section
       id="introduce"
@@ -43,7 +17,7 @@ export default function Introduce(): React.ReactNode {
               AI-Powered Chat
             </label>
           </h1>
-          <BannerIntroResponsive listImage={listImage} />
+          <BannerIntroResponsive />
           <h2 className="max-[1500px]:text-base max-md:text-sm">
             {
               "With AI-powered chat, getting the answers you need has never been easier. Instantly understand questions, resolve issues, and keep conversations flowing — all without the wait or confusion. Whether you're chatting for support, learning, or fun, AI makes every interaction faster, smoother, and more intuitive."
@@ -71,7 +45,7 @@ export default function Introduce(): React.ReactNode {
           </div>
         </div>
       </div>
-      <BannerIntro listImage={listImage} />
+      <BannerIntro />
     </section>
   );
 }

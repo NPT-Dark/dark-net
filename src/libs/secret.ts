@@ -16,7 +16,9 @@ export const hashCode = async (code: string) => {
 };
 //TODO Compare Password
 export const compareCode = async (codeCompare: string, codeQuery: string) => {
-  const hashCodeCompare = await hashCode(codeCompare);
-  const result = await bcrypt.compare(hashCodeCompare, codeQuery);
+  const result = await bcrypt.compare(
+    codeCompare + process.env.NEXTAUTH_SECRET,
+    codeQuery
+  );
   return result;
 };

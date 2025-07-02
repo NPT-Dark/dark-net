@@ -14,7 +14,7 @@ import { IoIosLogOut } from "react-icons/io";
 
 export default function HeaderHome(): React.ReactNode {
   const { data } = useSession();
-  const avatar = data?.user?.image || null;
+  const avatar = data?.user?.profileImage || null;
   const [open, setOpen] = useState(false);
   const avatarRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -45,13 +45,13 @@ export default function HeaderHome(): React.ReactNode {
         <div className="text-secondary flex items-center gap-5">
           <div className="relative">
             <BiSolidMessageSquareDetail className="cursor-pointer text-3xl" />
-            <div className="absolute -top-1 -right-1 bg-red-500 rounded-full text-white p-1 size-[18px] flex items-center justify-center text-[10px]">
+            <div className="absolute -top-1 -right-1 bg-error rounded-full text-white p-1 size-[18px] flex items-center justify-center text-[10px]">
               3
             </div>
           </div>
           <div className="relative">
             <IoMdNotifications className="cursor-pointer text-3xl" />
-            <div className="absolute -top-1 -right-1 bg-red-500 rounded-full text-white p-1 size-[18px] flex items-center justify-center text-[10px]">
+            <div className="absolute -top-1 -right-1 bg-error rounded-full text-white p-1 size-[18px] flex items-center justify-center text-[10px]">
               3
             </div>
           </div>
@@ -93,7 +93,7 @@ export default function HeaderHome(): React.ReactNode {
                   Settings
                 </li>
                 <li
-                  className="px-2 py-2 cursor-pointer bg-red-500 mx-2 mb-2 text-white rounded-lg flex items-center gap-2"
+                  className="px-2 py-2 cursor-pointer bg-error mx-2 mb-2 text-white rounded-lg flex items-center gap-2"
                   onClick={() => signOut()}
                 >
                   <IoIosLogOut size={20} />

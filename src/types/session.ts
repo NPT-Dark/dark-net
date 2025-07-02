@@ -1,7 +1,9 @@
 export type SessionType = {
   user?: {
-    email?: string;
-    name?: string;
-    image?: string;
+    id: string;
+    email: string;
+    displayName: string;
+    username: string;
+    profileImage: string;
   };
-};
+} | null;

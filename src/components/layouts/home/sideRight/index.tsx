@@ -1,84 +1,24 @@
 "use client";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import React, { useState } from "react";
-import { BiPlusCircle } from "react-icons/bi";
-import { FaUser } from "react-icons/fa";
-import { TiGroup } from "react-icons/ti";
+import React, { useMemo, useState } from "react";
 // import DropdownRadio from "./dropdown";
 import { BiSolidContact } from "react-icons/bi";
 import { SideRightType } from "~/types/home";
+import ListChats from "./listChat";
 
 export default function SideRight(): React.ReactNode {
-  const { data } = useSession();
   const [selectedType] = useState<SideRightType>(SideRightType.CHAT);
-  const avatar = data?.user?.image || null;
-  const ItemGroup = ({ key, IsCall }: { key: number; IsCall?: boolean }) => (
-    <div
-      key={key}
-      className="flex items-center justify-between shadow-sm border shadow-gray-100 border-gray-100 rounded-lg p-2"
-    >
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2">
-          <TiGroup size={30} className="text-secondary" />
-          <div className="flex flex-col gap-1">
-            <p className="text-sm">Nhóm 3 con mèo</p>
-            <div className="flex items-center gap-1">
-              {[0, 1, 2, 3].map((item, index) => (
-                <div key={index} className="relative size-3">
-                  {avatar ? (
-                    <Image
-                      src={avatar}
-                      alt="Profile picture"
-                      fill
-                      sizes="100%"
-                      className="rounded-full"
-                    />
-                  ) : (
-                    <FaUser className="text-xl" />
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-      {IsCall ? (
-        <button className="bg-secondary text-white rounded-lg p-1 h-fit text-[12px] flex items-center gap-1">
-          <BiPlusCircle size={18} />
-          Join
-        </button>
-      ) : null}
-    </div>
-  );
-  const ItemChat = ({ key }: { key: number }) => (
-    <div
-      key={key}
-      className="flex items-center justify-between shadow-sm border shadow-gray-100 border-gray-100 rounded-lg p-2 dark:shadow-none dark:border-secondary cursor-pointer active:scale-95 transition-all duration-300"
-    >
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2">
-          <div className="relative size-8">
-            {avatar ? (
-              <Image
-                src={avatar}
-                alt="Profile picture"
-                fill
-                sizes="100%"
-                className="rounded-full"
-              />
-            ) : (
-              <FaUser className="text-xl" />
-            )}
-          </div>
-          <div className="flex flex-col gap-1">
-            <p className="text-sm">Lê Quang Bảo</p>
-            <div className="italic text-[12px] text-green-500">Online</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  const ListItemSelected = useMemo(() => {
+    switch (selectedType) {
+      case SideRightType.CHAT:
+        return <ListChats />;
+      case SideRightType.GROUP:
+        return null;
+      case SideRightType.RELATED_CALL:
+        return null;
+      default:
+        return null;
+    }
+  }, [selectedType]);
   return (
     <>
       <div className="min-w-[350px] max-w-[350px] w-full h-[calc(100vh-150px)]" />
@@ -93,26 +33,7 @@ export default function SideRight(): React.ReactNode {
           </div>
           <div className="flex-1 min-h-0 overflow-y-auto custom-scroll w-full">
             <div className="w-full flex flex-col gap-3 px-5">
-              {selectedType === SideRightType.CHAT
-                ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((_, key) =>
-                    ItemChat({ key: key })
-                  )
-                : null}
-              {selectedType === SideRightType.GROUP
-                ? [1, 2, 3].map((_, key) =>
-                    ItemGroup({
-                      key: key,
-                    })
-                  )
-                : null}
-              {selectedType === SideRightType.RELATED_CALL
-                ? [1, 2, 3].map((_, key) =>
-                    ItemGroup({
-                      key: key,
-                      IsCall: true,
-                    })
-                  )
-                : null}
+              {ListItemSelected}
             </div>
           </div>
         </div>

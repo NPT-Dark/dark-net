@@ -3,11 +3,13 @@ import { useEffect, useState } from "react";
 export function useActiveSection(
   ids: string[],
   containerId: string,
-  pathName: string
+  pathName: string | null
 ): string | null {
   const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
+    if (typeof window === "undefined" || typeof document === "undefined")
+      return;
     const container = document.getElementById(containerId);
     if (!container) return setActiveId(null);
 

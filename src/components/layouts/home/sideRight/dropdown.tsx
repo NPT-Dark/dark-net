@@ -9,7 +9,6 @@ const options = [
 export default function DropdownRadio() {
   const [selected, setSelected] = useState("chats");
   const [open, setOpen] = useState(false);
-
   return (
     <div className="relative">
       <button
@@ -48,7 +47,7 @@ export default function DropdownRadio() {
               <span className="flex items-center gap-2">
                 {opt.label}
                 {opt.badge && (
-                  <span className="ml-2 bg-red-500 text-white rounded-full px-2 py-0.5 text-xs">
+                  <span className="ml-2 bg-error text-white rounded-full px-2 py-0.5 text-xs">
                     {opt.badge}
                   </span>
                 )}

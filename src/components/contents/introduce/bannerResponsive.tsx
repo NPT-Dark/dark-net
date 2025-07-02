@@ -1,14 +1,11 @@
 "use client";
 import { motion } from "framer-motion";
-export default function BannerIntroResponsive({
-  listImage,
-}: {
-  listImage: { label: string; image: string; icon: React.ReactNode }[];
-}): React.ReactNode {
+import { dataCoreValue } from "./introduce.data";
+export default function BannerIntroResponsive(): React.ReactNode {
   return (
     <div className="w-full flex lg:hidden">
       <div className="grid grid-cols-4 grid-rows-1 gap-4">
-        {listImage.map((item, index) => (
+        {dataCoreValue.map((item, index) => (
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: [0, 1.02, 1] }}
@@ -24,7 +21,9 @@ export default function BannerIntroResponsive({
             <label className="w-full flex justify-center py-1 text-lg font-semibold rounded-xl text-nowrap max-2sm:hidden">
               {item.label}
             </label>
-            <span className="hidden max-2sm:block">{item.icon}</span>
+            <span className="hidden max-2sm:block">
+              {<item.icon size={20} />}
+            </span>
           </motion.div>
         ))}
       </div>
