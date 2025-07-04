@@ -1,16 +1,28 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { IMakeCallData } from "~/types/call";
 import { IUserChat } from "~/types/user";
 
 type ChatPopupState = {
-  listChat: IUserChat[];
+  makeCallData: IMakeCallData;
 };
 
 const initialState: ChatPopupState = {
-  listChat: [],
+  makeCallData: {
+    to: "",
+    from: "",
+    signalData: {
+      type: "offer",
+      sdp: "",
+    },
+    callerInfo: {
+      name: "",
+      profileImage: "",
+    },
+  },
 };
 
 const chatPopupSlice = createSlice({
-  name: "chatPopup",
+  name: "call ",
   initialState,
   reducers: {
     pushChatPopup(state, action: PayloadAction<IUserChat>) {

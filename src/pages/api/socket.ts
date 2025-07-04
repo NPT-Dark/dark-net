@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 import type { NextApiRequest } from "next";
 import type { NextApiResponseWithSocket } from "~/types/socket";
+import { IMakeCallData } from "~/types/call";
 
 export const config = {
   api: {
@@ -18,20 +19,22 @@ export default function handler(
     const io = new Server(res.socket.server as any, {
       path: "/api/socketio",
     });
-
     io.on("connection", (socket) => {
-      console.log("✅ Client connected:", socket.id);
-
-      socket.on("client-message", (msg) => {
-        console.log("📨 Received:", msg);
-        io.emit("server-message", `🪄 Echo: ${msg}`);
+      socket.on("join-my-room", (userId: string) => {
+        console.log("🟢 User joined room:", userId);
+        socket.join(userId);
       });
-
+      socket.on("make-call", (data: IMakeCallData) => {
+        socket.to(data.to).emit("incoming-call", {
+          sender: data.from,
+          signalData: data.signalData,
+          callerInfo: data.callerInfo,
+        });
+      });
       socket.on("disconnect", () => {
         console.log("❌ Disconnected:", socket.id);
       });
     });
-
     res.socket.server.io = io;
   }
 

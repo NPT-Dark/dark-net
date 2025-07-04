@@ -5,6 +5,7 @@ import SideLeft from "~/components/layouts/home/sideLeft";
 import SideRight from "~/components/layouts/home/sideRight";
 import WrapperSession from "~/components/layouts/wrapperSession";
 import ReviewImg from "~/components/ui/reviewImg";
+import SocketProvider from "~/providers/socket";
 import StoreProvider from "~/providers/store";
 export const metadata: Metadata = {
   title: "Dark Net – Home",
@@ -16,16 +17,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <WrapperSession>
       <StoreProvider>
-        <div className="relative w-full min-h-screen flex flex-col items-center justify-stretch pb-10">
-          <HeaderHome />
-          <div className="flex justify-between w-full mt-5 relative">
-            <SideLeft />
-            {children}
-            <SideRight />
+        <SocketProvider>
+          <div className="relative w-full min-h-screen flex flex-col items-center justify-stretch pb-10">
+            <HeaderHome />
+            <div className="flex justify-between w-full mt-5 relative">
+              <SideLeft />
+              {children}
+              <SideRight />
+            </div>
           </div>
-        </div>
-        <ReviewImg />
-        <ChatPopup />
+          <ReviewImg />
+          <ChatPopup />
+        </SocketProvider>
       </StoreProvider>
     </WrapperSession>
   );

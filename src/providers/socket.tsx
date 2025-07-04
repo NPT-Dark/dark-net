@@ -2,6 +2,7 @@
 
 import { io } from "socket.io-client";
 import { useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 export const socket = io({
   path: "/api/socketio",
@@ -13,22 +14,25 @@ export default function SocketProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const { data } = useSession();
   useEffect(() => {
-    fetch("/api/socket").finally(() => {
-      if (!socket.connected) {
-        socket.connect();
-      }
-      socket.on("connect", () => {
-        console.log("🟢 Connected to socket:", socket.id);
+    if (data) {
+      fetch("/api/socket").finally(() => {
+        if (!socket.connected) {
+          socket.connect();
+        }
+        console.log(data);
+
+        socket.on("connect", () => {
+          console.log("🟢 Connected to socket:", socket.id);
+          socket.emit("join-my-room", data?.user.id);
+        });
       });
-      socket.on("server-message", (msg) => {
-        console.log("💬 From server:", msg);
-      });
-    });
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+      return () => {
+        socket.disconnect();
+      };
+    }
+  }, [data]);
 
   return <>{children}</>;
 }

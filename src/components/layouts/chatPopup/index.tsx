@@ -1,6 +1,6 @@
 "use client";
 import { socket } from "~/providers/socket";
-import React from "react";
+import React, { useEffect } from "react";
 import { BiMinus } from "react-icons/bi";
 import { IoCall, IoClose } from "react-icons/io5";
 import { useSelector } from "react-redux";
@@ -11,7 +11,6 @@ import { RootState } from "~/store";
 
 export default function ChatPopup(): React.ReactNode {
   const { listChat } = useSelector((state: RootState) => state.chatPopup);
-  if (listChat.length === 0) return null;
   async function handleCall(id: string) {
     const dataCall = await getDataCall();
     if (!dataCall) {
@@ -19,15 +18,26 @@ export default function ChatPopup(): React.ReactNode {
         message: "Your device not found!",
       });
     }
-    const { stream, pc, ice } = dataCall;
+    const { pc, ice } = dataCall;
     const offer = await pc.createOffer();
     await pc.setLocalDescription(offer);
-    socket.emit("call", {
+    socket.emit("make-call", {
+      idReceiver: id,
       userId: id,
-      ice: dataCall.ice,
+      ice: ice,
       sdp: dataCall.pc.localDescription,
     });
   }
+  useEffect(() => {
+    socket.on(
+      "call-made",
+      (data: { userId: string; ice: string; sdp: string }) => {
+        console.log("💬 From server:", data);
+      }
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socket]);
+  if (listChat.length === 0) return null;
   return (
     <div className="fixed bottom-0 right-20 flex items-center">
       {listChat.map((item) => (
