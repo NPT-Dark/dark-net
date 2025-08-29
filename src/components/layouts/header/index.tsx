@@ -15,7 +15,7 @@ export default function Header(): React.ReactNode {
     "container",
     pathName
   );
-  if (pathName === "/home") return null;
+  if (pathName === "/home" || pathName.includes("/room-call")) return null;
   return (
     <>
       <header className="fixed w-full flex justify-center left-0 top-0 z-50 h-[98px] max-2md:h-auto">

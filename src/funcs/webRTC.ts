@@ -1,48 +1,129 @@
-async function getDataCall() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: {
-        autoGainControl: true,
-        noiseSuppression: false,
-        echoCancellation: false,
-      },
-    });
-    const pc = new RTCPeerConnection();
-    stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+import * as mediasoupClient from "mediasoup-client";
+import { Socket } from "socket.io-client";
 
-    // pc.ontrack = (event) => {
-    //   const remoteStream = event.streams[0];
-    //   if (remoteStream.getVideoTracks().length > 0 && remoteVideo.current) {
-    //     remoteVideo.current.srcObject = remoteStream;
-    //     remoteVideo.current.muted = false;
-    //   }
-    //   if (remoteStream.getAudioTracks().length > 0 && remoteVideo.current) {
-    //     remoteVideo.current.srcObject = remoteStream;
-    //     remoteVideo.current.muted = false;
-    //     setAudioReady(true);
-    //     remoteVideo.current.play().catch((e) => {
-    //       console.warn("Audio play error:", e);
-    //     });
-    //   }
-    // };
+export async function startCall({
+  socket,
+  roomId,
+  callerId,
+  receiverIds,
+  stream,
+}: {
+  socket: Socket;
+  roomId: string;
+  callerId: string;
+  receiverIds: string[];
+  stream: MediaStream;
+}) {
+  const device = new mediasoupClient.Device();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const routerRtpCapabilities = await new Promise<any>((resolve) => {
+    socket.emit("get-rtp-capabilities", resolve);
+  });
+  await device.load({ routerRtpCapabilities });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const transportOptions = await new Promise<any>((resolve) => {
+    socket.emit("create-transport", resolve);
+  });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const ice: any = [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    pc.onicecandidate = (event: any) => {
-      if (event?.candidate !== null) {
-        ice.push(event?.candidate.toJSON());
+  const sendTransport = device.createSendTransport(transportOptions);
+
+  sendTransport.on("connect", ({ dtlsParameters }, callback) => {
+    socket.emit("connect-transport", { dtlsParameters }, callback);
+  });
+
+  sendTransport.on("produce", ({ kind, rtpParameters }, callback) => {
+    socket.emit(
+      "produce",
+      { kind, rtpParameters },
+      ({ id }: { id: string }) => {
+        callback({ id });
+        receiverIds.forEach((receiverId) => {
+          socket.emit("new-producer", {
+            roomId,
+            producerId: id,
+            kind,
+            from: callerId,
+            to: receiverId,
+          });
+        });
       }
-    };
-    return {
-      pc,
-      stream,
-      ice,
-    };
-  } catch (_: unknown) {
-    console.error("Error accessing microphone:", _);
-    return null;
+    );
+  });
+
+  for (const track of stream.getTracks()) {
+    await sendTransport.produce({ track });
   }
+
+  console.log("✅ Caller started streaming");
 }
 
-export { getDataCall };
+export async function answerCall({
+  socket,
+  videoElement,
+}: {
+  socket: Socket;
+  videoElement?: HTMLVideoElement | null;
+}) {
+  const device = new mediasoupClient.Device();
+
+  // Lấy thông tin RTP của router từ server
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const routerRtpCapabilities = await new Promise<any>((resolve) => {
+    socket.emit("get-rtp-capabilities", resolve);
+  });
+  await device.load({ routerRtpCapabilities });
+
+  // Tạo recv transport
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const transportOptions = await new Promise<any>((resolve) => {
+    socket.emit("create-consumer-transport", resolve);
+  });
+
+  const recvTransport = device.createRecvTransport(transportOptions);
+
+  recvTransport.on("connect", ({ dtlsParameters }, callback) => {
+    socket.emit("connect-consumer-transport", { dtlsParameters }, callback);
+  });
+
+  // Dùng map để giữ stream theo kind: tránh ghi đè
+  const mediaStreams: Record<string, MediaStream> = {};
+
+  socket.on("new-producer", async ({ producerId, kind }) => {
+    console.log("📥 New producer received:", kind, producerId);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { id, rtpParameters } = await new Promise<any>((resolve) => {
+      socket.emit(
+        "consume",
+        {
+          producerId,
+          rtpCapabilities: device.rtpCapabilities,
+        },
+        resolve
+      );
+    });
+
+    const consumer = await recvTransport.consume({
+      id,
+      producerId,
+      kind,
+      rtpParameters,
+    });
+
+    // Tạo hoặc thêm track vào stream theo kind
+    if (!mediaStreams[kind]) {
+      mediaStreams[kind] = new MediaStream();
+    }
+
+    mediaStreams[kind].addTrack(consumer.track);
+
+    if (kind === "video" && videoElement) {
+      videoElement.srcObject = mediaStreams[kind];
+      videoElement.play().catch(console.error);
+    }
+
+    console.log(`✅ Đã consume ${kind}`);
+  });
+
+  console.log("🎧 Ready to receive streams");
+}

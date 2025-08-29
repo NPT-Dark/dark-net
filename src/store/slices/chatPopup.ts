@@ -16,8 +16,13 @@ const chatPopupSlice = createSlice({
     pushChatPopup(state, action: PayloadAction<IUserChat>) {
       state.listChat.unshift(action.payload);
     },
+    removeChatPopup(state, action: PayloadAction<string>) {
+      state.listChat = state.listChat.filter(
+        (item) => item._id !== action.payload
+      );
+    },
   },
 });
 
-export const { pushChatPopup } = chatPopupSlice.actions;
+export const { pushChatPopup, removeChatPopup } = chatPopupSlice.actions;
 export default chatPopupSlice.reducer;

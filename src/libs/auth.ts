@@ -1,7 +1,6 @@
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { loginUser } from "~/actions/user";
 import type { AuthOptions } from "next-auth";
 
 export const authOptions: AuthOptions = {
@@ -28,7 +27,18 @@ export const authOptions: AuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials) return null;
-        const verifyData = await loginUser(credentials);
+        const rs = await fetch(
+          process.env.NEXT_PUBLIC_API_URL + `/user/verify`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(credentials),
+          }
+        );
+        if (!rs.ok) return null;
+        const verifyData = await rs.json();
         if (verifyData) {
           return {
             id: verifyData?._id.toString(),

@@ -5,8 +5,9 @@ import { ImProfile } from "react-icons/im";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignUpFormData, signUpSchema } from "~/schemas/user";
-import { createUserAction } from "~/actions/user";
 import InputField from "~/components/ui/inputField";
+import { toastError } from "~/components/ui/toastGlobal";
+import { toast } from "react-toastify";
 
 export default function SignUpForm() {
   const {
@@ -19,8 +20,17 @@ export default function SignUpForm() {
 
   async function onSubmit(data: SignUpFormData) {
     try {
-      const rs = await createUserAction(data);
-      console.log(rs);
+      const rs = await fetch(process.env.NEXT_PUBLIC_API_URL + "/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (!rs.ok) {
+        return toastError({ message: "Sign up error" });
+      }
+      return toast.success("Sign up successfully");
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log(error.message);

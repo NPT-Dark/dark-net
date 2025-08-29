@@ -2,6 +2,7 @@ import Image from "next/image";
 import { BiPlusCircle } from "react-icons/bi";
 import { FaUser } from "react-icons/fa";
 import { TiGroup } from "react-icons/ti";
+import { formatAvatar } from "~/components/ui/formatAvatar";
 const ItemGroup = ({
   key,
   IsCall,
@@ -49,35 +50,25 @@ const ItemGroup = ({
   </div>
 );
 const ItemChat = ({
-  key,
   avatar,
   displayName,
   onClick,
 }: {
-  key: string;
   displayName?: string;
   avatar?: string;
   onClick: () => void;
 }) => (
   <div
-    key={key}
     className="flex items-center justify-between shadow-sm border shadow-gray-100 border-gray-100 rounded-lg p-2 dark:shadow-none dark:border-secondary cursor-pointer active:scale-95 transition-all duration-300"
     onClick={onClick}
   >
     <div className="flex flex-col gap-1">
       <div className="flex items-center gap-2">
         <div className="relative size-8">
-          {avatar ? (
-            <Image
-              src={avatar}
-              alt="Profile picture"
-              fill
-              sizes="100%"
-              className="rounded-full"
-            />
-          ) : (
-            <FaUser className="text-xl" />
-          )}
+          {formatAvatar({
+            avatar,
+            isFormatColor: true,
+          })}
         </div>
         <div className="flex flex-col gap-1">
           <p className="text-sm">{displayName || "No Name"}</p>

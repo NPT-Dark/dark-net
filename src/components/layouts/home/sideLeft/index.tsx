@@ -1,15 +1,14 @@
 "use client";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import React from "react";
 import { BiSearch } from "react-icons/bi";
-import { FaUser } from "react-icons/fa";
 import ThemeControl from "../../theme";
 import { FaUserFriends } from "react-icons/fa";
 import { SiYoutubegaming } from "react-icons/si";
 import { MdLibraryMusic } from "react-icons/md";
 import { FaBookBookmark } from "react-icons/fa6";
 import { IoPersonAdd } from "react-icons/io5";
+import { formatAvatar } from "~/components/ui/formatAvatar";
 
 export default function SideLeft(): React.ReactNode {
   const { data } = useSession();
@@ -22,17 +21,11 @@ export default function SideLeft(): React.ReactNode {
         <div className="w-full flex items-center justify-between gap-3 shadow-all p-5 rounded-md dark:shadow-none dark:border">
           <div className="flex items-center gap-3">
             <div className="relative size-10">
-              {avatar ? (
-                <Image
-                  src={avatar}
-                  alt="Profile picture"
-                  fill
-                  sizes="100%"
-                  className="rounded-full"
-                />
-              ) : (
-                <FaUser className="text-xl" />
-              )}
+              {formatAvatar({
+                avatar,
+                isFormatColor: true,
+                isSize: 10,
+              })}
             </div>
             <div className="flex flex-col gap-1">
               <p className="text-nowrap font-medium text-sm">{name}</p>
@@ -62,17 +55,10 @@ export default function SideLeft(): React.ReactNode {
               >
                 <div className="flex items-center gap-2 cursor-pointer">
                   <div className="relative size-8">
-                    {avatar ? (
-                      <Image
-                        src={avatar}
-                        alt="Profile picture"
-                        fill
-                        sizes="100%"
-                        className="rounded-full"
-                      />
-                    ) : (
-                      <FaUser className="text-xl" />
-                    )}
+                    {formatAvatar({
+                      avatar,
+                      isFormatColor: true,
+                    })}
                   </div>
                   <p className="text-nowrap font-medium text-sm">{name}</p>
                 </div>

@@ -1,11 +1,13 @@
 "use client";
-
-import { io } from "socket.io-client";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { io, Socket } from "socket.io-client";
 
-export const socket = io({
-  path: "/api/socketio",
+const SOCKET_URL =
+  process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3333";
+
+export const socket: Socket = io(SOCKET_URL, {
+  transports: ["websocket"],
   autoConnect: false,
 });
 
@@ -14,25 +16,17 @@ export default function SocketProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { data } = useSession();
-  useEffect(() => {
-    if (data) {
-      fetch("/api/socket").finally(() => {
-        if (!socket.connected) {
-          socket.connect();
-        }
-        console.log(data);
+  const { data: session } = useSession();
 
-        socket.on("connect", () => {
-          console.log("🟢 Connected to socket:", socket.id);
-          socket.emit("join-my-room", data?.user.id);
-        });
-      });
-      return () => {
-        socket.disconnect();
-      };
+  useEffect(() => {
+    if (session && !socket.connected) {
+      socket.connect();
+      socket.emit("register", session.user?.id);
     }
-  }, [data]);
+    return () => {
+      socket.disconnect();
+    };
+  }, [session]);
 
   return <>{children}</>;
 }
