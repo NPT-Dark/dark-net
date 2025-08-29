@@ -15,12 +15,10 @@ export async function startCall({
   stream: MediaStream;
 }) {
   const device = new mediasoupClient.Device();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const routerRtpCapabilities = await new Promise<any>((resolve) => {
     socket.emit("get-rtp-capabilities", resolve);
   });
   await device.load({ routerRtpCapabilities });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const transportOptions = await new Promise<any>((resolve) => {
     socket.emit("create-transport", resolve);
   });
@@ -67,14 +65,12 @@ export async function answerCall({
   const device = new mediasoupClient.Device();
 
   // Lấy thông tin RTP của router từ server
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const routerRtpCapabilities = await new Promise<any>((resolve) => {
     socket.emit("get-rtp-capabilities", resolve);
   });
   await device.load({ routerRtpCapabilities });
 
   // Tạo recv transport
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const transportOptions = await new Promise<any>((resolve) => {
     socket.emit("create-consumer-transport", resolve);
   });
@@ -85,13 +81,11 @@ export async function answerCall({
     socket.emit("connect-consumer-transport", { dtlsParameters }, callback);
   });
 
-  // Dùng map để giữ stream theo kind: tránh ghi đè
   const mediaStreams: Record<string, MediaStream> = {};
 
   socket.on("new-producer", async ({ producerId, kind }) => {
     console.log("📥 New producer received:", kind, producerId);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { id, rtpParameters } = await new Promise<any>((resolve) => {
       socket.emit(
         "consume",

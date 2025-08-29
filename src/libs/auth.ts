@@ -58,7 +58,6 @@ export const authOptions: AuthOptions = {
     updateAge: 60 * 15,
   },
   callbacks: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async jwt({ token, user }: any) {
       if (user) {
         token.userId = user.id.toString();
@@ -69,7 +68,6 @@ export const authOptions: AuthOptions = {
       }
       return token;
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async session({ session, token }: any) {
       if (token?.userId) {
         session.user.id = token.userId;

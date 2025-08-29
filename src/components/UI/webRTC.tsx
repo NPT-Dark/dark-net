@@ -12,7 +12,6 @@ export default function WebRTCCall() {
   const [answer, setAnswer] = useState("");
   const [remoteSDP, setRemoteSDP] = useState("");
   const [remoteICE, setRemoteICE] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [localICE, setLocalICE] = useState<any[]>([]);
   const [audioReady, setAudioReady] = useState(false);
   const [videoEnabled, setVideoEnabled] = useState(false);
@@ -49,7 +48,6 @@ export default function WebRTCCall() {
         }
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pc.onicecandidate = (event: any) => {
         if (event?.candidate !== null) {
           setLocalICE((prev) => [...prev, event?.candidate.toJSON()]);
@@ -156,8 +154,8 @@ export default function WebRTCCall() {
       const raw = JSON.parse(remoteICE);
       const candidates: RTCIceCandidateInit[] = Array.isArray(raw)
         ? raw.map((item) =>
-            typeof item === "string" ? JSON.parse(item) : item
-          )
+          typeof item === "string" ? JSON.parse(item) : item
+        )
         : [];
 
       for (const candidate of candidates) {
